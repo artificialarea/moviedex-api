@@ -31,7 +31,7 @@ app.get('/movie', (req, res) => {
   console.log(avg_vote, parseFloat(avg_vote))
 
   // Validation
-  if(isNaN(+avg_vote)) { // unary plus: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Unary_plus
+  if(avg_vote && isNaN(+avg_vote)) { // unary plus: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Unary_plus
     return res
       .status(400)
       .json("avg_vote must be numeric")
@@ -44,6 +44,17 @@ app.get('/movie', (req, res) => {
     })
   }
 
+  if(genre) {
+    response = response.filter(movie => {
+      return movie.genre.toLowerCase().includes(genre.toLowerCase())
+    })
+  }
+
+  if(country) {
+    response = response.filter(movie => {
+      return movie.country.toLowerCase().includes(country.toLowerCase())
+    })
+  }
 
   res.json(response)
 })
