@@ -28,7 +28,8 @@ app.use(function validateBearerToken(req, res, next) {
 app.get('/movie', (req, res) => {
   let response = MOVIEDEX
   const { genre, country, avg_vote } = req.query
-  console.log(avg_vote, parseFloat(avg_vote))
+
+  console.log(avg_vote, parseFloat(avg_vote), +avg_vote)
 
   // Validation
   if(avg_vote && isNaN(+avg_vote)) { // unary plus: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Unary_plus
