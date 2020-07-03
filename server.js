@@ -13,11 +13,40 @@ app.use(morgan('dev'))
 app.use(helmet())
 app.use(cors())
 
-app.get('/', (req, res) => {
-  res.send('Hello, Express.')
+// VALIDATION MIDDLEWARE
+app.use(function validateBearerToken(req, res, next) {
+  const apiToken = process.env.API_TOKEN
+  const authToken = req.get('Authorization')
+
+  if (!authToken || authToken.split(' ')[1] !== apiToken) {
+    return res.status(401).json('Unauthorized request')
+  }
+
+  next()
 })
 
+app.get('/movie', (req, res) => {
+  let response = MOVIEDEX
+  const { genre, country, avg_vote } = req.query
+  console.log(avg_vote, parseFloat(avg_vote))
 
+  // Validation
+  if(isNaN(+avg_vote)) { // unary plus: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Unary_plus
+    return res
+      .status(400)
+      .json("avg_vote must be numeric")
+  }
+  
+  // if valid 
+  if(avg_vote) {
+    response = response.filter(movie => {
+     return movie.avg_vote >= parseFloat(avg_vote)
+    })
+  }
+
+
+  res.json(response)
+})
 
 
 // server
