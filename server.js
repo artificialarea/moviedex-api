@@ -74,5 +74,5 @@ app.use((error, req, res, next) => {
 const PORT = process.env.PORT || 8000
 
 app.listen(PORT, () => {
-  console.log('server started')
+  console.log('server started up')
 })
