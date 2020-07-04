@@ -3,7 +3,9 @@ const express = require('express')
 const morgan = require('morgan')
 const helmet = require('helmet')
 const cors = require('cors')
-const MOVIEDEX = require('./movies-data-small.json')
+
+const dbSetting = process.env.NODE_ENV === 'production' ? './movies-data.json' : './movies-data-small.json'
+const MOVIEDEX = require(dbSetting)
 
 const app = express();
 
