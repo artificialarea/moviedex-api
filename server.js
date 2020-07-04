@@ -1,5 +1,4 @@
 require('dotenv').config()
-console.log(process.env.API_TOKEN)
 const express = require('express')
 const morgan = require('morgan')
 const helmet = require('helmet')
@@ -9,7 +8,8 @@ const MOVIEDEX = require('./movies-data-small.json')
 const app = express();
 
 // Install Middleware
-app.use(morgan('dev'))
+const morganSetting = process.env.NODE_ENV === 'production' ? 'tiny' : 'common'
+app.use(morgan(morganSetting))
 app.use(helmet())
 app.use(cors())
 
@@ -28,9 +28,7 @@ app.use(function validateBearerToken(req, res, next) {
 app.get('/movie', (req, res) => {
   let response = MOVIEDEX
   const { genre, country, avg_vote } = req.query
-
-  console.log(avg_vote, parseFloat(avg_vote), +avg_vote)
-
+  
   // Validation
   if(avg_vote && isNaN(+avg_vote)) { // unary plus: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Unary_plus
     return res
@@ -60,10 +58,21 @@ app.get('/movie', (req, res) => {
   res.json(response)
 })
 
+// 4 parameters in middleware, express knows to treat this as error handler
+app.use((error, req, res, next) => {
+  let response
+  if (process.env.NODE_ENV === 'production') {
+    response = { error: { message: 'server error' }}
+  } else {
+    response = { error }
+  }
+  res.status(500).json(response)
+})
+
 
 // server
-const PORT = 8000;
+const PORT = process.env.PORT || 8000
 
 app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost${PORT}`)
+  console.log('server started')
 })
