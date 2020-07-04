@@ -16,4 +16,6 @@ per [checkpoint 6 assignment](https://courses.thinkful.com/node-postgres-v1/chec
 
 **on master branch...**
 
+deployed to `https://majestic-haleakala-01735.herokuapp.com/`
+
 per [checkpoint 7 assignment](https://courses.thinkful.com/node-postgres-v1/checkpoint/7#assignment)
